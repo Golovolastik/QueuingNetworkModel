@@ -3,8 +3,9 @@ package entity;
 import java.util.Random;
 
 public class RequestHandler {
+
+    private int handlerId;
     private Request currentRequest;
-    private boolean isBusy = false;
     private byte noHandleProbability;
 
     RequestHandler(byte handleProbability) {
@@ -12,23 +13,35 @@ public class RequestHandler {
     }
 
     public void processRequest() {
-        if (new Random().nextInt(noHandleProbability) < noHandleProbability) {
-            isBusy = true;
-        } else {
-            isBusy = false;
-            System.out.println("Request # " + currentRequest.getId() + " processed.");
+        if (currentRequest == null) {
+            return;
+        }
+        if (new Random().nextInt(100) > noHandleProbability) {
+            System.out.println("Request # " + currentRequest.getId()
+                    + " processed in handler # " + handlerId + " at "
+                    + QNM.getTactId() + " tact");
             currentRequest = null;
+        } else {
+            System.out.println("Request # " + currentRequest.getId()
+                    + " not processed in handler # "  + handlerId + " at "
+                    + QNM.getTactId()+ " tact");
         }
     }
 
-    public boolean isBusy() {
-        return isBusy;
-    }
-    private void setBusy() {
-        isBusy = true;
+    public Request getCurrentRequest() {
+        return currentRequest;
     }
 
     public void setCurrentRequest(Request currentRequest) {
         this.currentRequest = currentRequest;
     }
+
+    public int getHandlerId() {
+        return handlerId;
+    }
+
+    public void setHandlerId(int handlerId) {
+        this.handlerId = handlerId;
+    }
+
 }

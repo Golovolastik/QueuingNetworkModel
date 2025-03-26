@@ -1,11 +1,16 @@
 package entity;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class RequestQueue {
     private int size;
     private boolean isFree = true;
-    private ArrayList<Request> requests;
+    private Queue<Request> requests = new LinkedList<>();
+
+    public Queue<Request> getRequests() {
+        return requests;
+    }
 
     RequestQueue(int size) {
         this.size = size;
@@ -15,9 +20,9 @@ public class RequestQueue {
 
     }
 
-    public boolean requestHandlerIsBusy(RequestHandler handler) {
-        return handler.isBusy();
-    }
+//    public boolean requestHandlerIsBusy(RequestHandler handler) {
+//        return handler.isBusy();
+//    }
 
     public boolean requestQueueIsFree() {
         return isFree;

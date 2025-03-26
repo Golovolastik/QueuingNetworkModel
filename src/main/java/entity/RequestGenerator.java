@@ -1,14 +1,12 @@
 package entity;
 
 public class RequestGenerator {
-    private int requestFrequency;
 
-    RequestGenerator(int frequency) {
-        requestFrequency = frequency;
+    RequestGenerator() {
     }
 
     public Request generateRequest(int requestId, int tactId) {
-        requestId++;
+        System.out.println("Generating request # " + requestId + " at tact # " + tactId);
         return new Request(requestId, tactId);
 
     }

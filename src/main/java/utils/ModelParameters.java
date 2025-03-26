@@ -7,7 +7,7 @@ public class ModelParameters {
     private byte[] probability;
     private int queueSize;
 
-    ModelParameters(int requestFrequency, int numberOfHandlers, int queueSize, byte[] probability, int simulationTime) {
+    public ModelParameters(int requestFrequency, int numberOfHandlers, int queueSize, byte[] probability, int simulationTime) {
         if (numberOfHandlers != probability.length) {
             throw new IllegalArgumentException("Number of handlers does not match probability array");
         }
