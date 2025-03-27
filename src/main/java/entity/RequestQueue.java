@@ -20,19 +20,17 @@ public class RequestQueue {
 
     }
 
-//    public boolean requestHandlerIsBusy(RequestHandler handler) {
-//        return handler.isBusy();
-//    }
-
     public boolean requestQueueIsFree() {
+        isFree = requests.size() < size;
         return isFree;
     }
 
-    public boolean addRequest(Request request) {
+    public void addRequest(Request request) {
         if (isFree) {
             requests.add(request);
-            return true;
         }
-        return false;
+        if (requests.size() >= size) {
+            isFree = false;
+        }
     }
 }

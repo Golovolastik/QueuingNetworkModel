@@ -21,10 +21,23 @@ public class QNM {
     public void runModel() {
         int timeToNextRequest = modelParameters.getRequestFrequency();
         for (int i=1; i<=modelParameters.getSimulationTime(); i++) {
+
             tactId = i;
+
+
+
+            moveFromQueue();
+
+            System.out.println("Tact ID: " + tactId
+                    + " Time to next request: " + timeToNextRequest
+                    + " Queue Size " + requestQueue.getRequests().size()
+                    + " Request Handler #1 is " + requestHandlers[0].getCurrentRequest()
+                    + " Request Handler #2 is " + requestHandlers[1].getCurrentRequest()
+            );
+
             processRequests();
             timeToNextRequest = handleQueue(timeToNextRequest);
-            moveFromQueue();
+
 
         }
     }
