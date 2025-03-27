@@ -1,5 +1,6 @@
 package entity;
 
+import stats.StatCollector;
 import utils.ModelParameters;
 
 import java.util.Queue;
@@ -9,6 +10,7 @@ public class QNM {
     private RequestQueue requestQueue;
     private RequestHandler[] requestHandlers;
     private ModelParameters modelParameters;
+    private StatCollector statCollector;
 
     private static int tactId = 1;
     private int requestId = 1;
@@ -33,21 +35,24 @@ public class QNM {
 
             timeToNextRequest = handleRequestGeneration(timeToNextRequest);
 
-            System.out.println("Tact ID: " + tactId
-                    + " Time to next request: " + timeToNextRequest
-                    + " Queue Size " + requestQueue.getRequests().size()
-                    + " Request Handler #1 is " + requestHandlers[0].getCurrentRequest()
-                    + " Request Handler #2 is " + requestHandlers[1].getCurrentRequest()
-            );
-
-
+//            System.out.println("Tact ID: " + tactId
+//                    + " Time to next request: " + timeToNextRequest
+//                    + " Queue Size " + requestQueue.getRequests().size()
+//                    + " Request Handler #1 is " + requestHandlers[0].getCurrentRequest()
+//                    + " Request Handler #2 is " + requestHandlers[1].getCurrentRequest()
+//            );
+            statCollector.increaseQueueSize(requestQueue.getRequests().size());
         }
+        statCollector.setNumberOfTacts(tactId);
+        statCollector.printStatistics();
     }
 
     private void processRequests() {
         for (RequestHandler requestHandler : requestHandlers) {
             if (requestHandler.getCurrentRequest() != null) {
-                requestHandler.processRequest();
+                if (requestHandler.processRequest()){
+                    statCollector.increaseProcessedRequestCount();
+                }
             }
         }
     }
@@ -78,7 +83,8 @@ public class QNM {
             timeToNextRequest = modelParameters.getRequestFrequency() - 1;
             return timeToNextRequest;
         } else if (timeToNextRequest == 0 && !requestQueue.requestQueueIsFree()) {
-            System.out.println("\nBlocking request generation\n");
+            //System.out.println("\nBlocking request generation\n");
+            statCollector.addBlockedTact();
             return timeToNextRequest;
         } else if (timeToNextRequest > 0) {
             --timeToNextRequest;
@@ -91,6 +97,7 @@ public class QNM {
         this.requestGenerator = new RequestGenerator();
         this.requestQueue = new RequestQueue(modelParameters.getQueueSize());
         this.requestHandlers = initHandlers();
+        this.statCollector = new StatCollector();
     }
 
     private RequestHandler[] initHandlers() {

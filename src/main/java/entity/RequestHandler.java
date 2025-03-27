@@ -12,19 +12,21 @@ public class RequestHandler {
         this.noHandleProbability = handleProbability;
     }
 
-    public void processRequest() {
+    public boolean processRequest() {
         if (currentRequest == null) {
-            return;
+            return false;
         }
-        if (new Random().nextInt(100) > noHandleProbability) {
-            System.out.println("Request # " + currentRequest.getId()
-                    + " processed in handler # " + handlerId + " at "
-                    + QNM.getTactId() + " tact");
+        if (new Random().nextInt(100) >= noHandleProbability) {
+//            System.out.println("Request # " + currentRequest.getId()
+//                    + " processed in handler # " + handlerId + " at "
+//                    + QNM.getTactId() + " tact");
             currentRequest = null;
+            return true;
         } else {
-            System.out.println("Request # " + currentRequest.getId()
-                    + " not processed in handler # "  + handlerId + " at "
-                    + QNM.getTactId()+ " tact");
+//            System.out.println("Request # " + currentRequest.getId()
+//                    + " not processed in handler # "  + handlerId + " at "
+//                    + QNM.getTactId()+ " tact");
+            return false;
         }
     }
 
@@ -34,10 +36,6 @@ public class RequestHandler {
 
     public void setCurrentRequest(Request currentRequest) {
         this.currentRequest = currentRequest;
-    }
-
-    public int getHandlerId() {
-        return handlerId;
     }
 
     public void setHandlerId(int handlerId) {
