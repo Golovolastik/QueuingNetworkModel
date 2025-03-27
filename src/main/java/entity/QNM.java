@@ -23,10 +23,15 @@ public class QNM {
         for (int i=1; i<=modelParameters.getSimulationTime(); i++) {
 
             tactId = i;
+            processRequests();
 
 
 
             moveFromQueue();
+
+
+
+            timeToNextRequest = handleRequestGeneration(timeToNextRequest);
 
             System.out.println("Tact ID: " + tactId
                     + " Time to next request: " + timeToNextRequest
@@ -34,9 +39,6 @@ public class QNM {
                     + " Request Handler #1 is " + requestHandlers[0].getCurrentRequest()
                     + " Request Handler #2 is " + requestHandlers[1].getCurrentRequest()
             );
-
-            processRequests();
-            timeToNextRequest = handleQueue(timeToNextRequest);
 
 
         }
@@ -62,14 +64,24 @@ public class QNM {
         }
     }
 
-    private int handleQueue(int timeToNextRequest) {
+    private int handleRequestGeneration(int timeToNextRequest) {
         if (timeToNextRequest == 0 && requestQueue.requestQueueIsFree()) {
             Request request =  requestGenerator.generateRequest(requestId++, tactId);
+            for (RequestHandler requestHandler : requestHandlers) {
+                if (requestHandler.getCurrentRequest() == null) {
+                    requestHandler.setCurrentRequest(request);
+                    timeToNextRequest = modelParameters.getRequestFrequency() - 1;
+                    return timeToNextRequest;
+                }
+            }
             requestQueue.addRequest(request);
             timeToNextRequest = modelParameters.getRequestFrequency() - 1;
             return timeToNextRequest;
+        } else if (timeToNextRequest == 0 && !requestQueue.requestQueueIsFree()) {
+            System.out.println("\nBlocking request generation\n");
+            return timeToNextRequest;
         } else if (timeToNextRequest > 0) {
-            return --timeToNextRequest;
+            --timeToNextRequest;
         }
         return timeToNextRequest;
     }
