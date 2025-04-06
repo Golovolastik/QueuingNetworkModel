@@ -17,15 +17,9 @@ public class RequestHandler {
             return false;
         }
         if (new Random().nextInt(100) >= noHandleProbability) {
-//            System.out.println("Request # " + currentRequest.getId()
-//                    + " processed in handler # " + handlerId + " at "
-//                    + QNM.getTactId() + " tact");
             currentRequest = null;
             return true;
         } else {
-//            System.out.println("Request # " + currentRequest.getId()
-//                    + " not processed in handler # "  + handlerId + " at "
-//                    + QNM.getTactId()+ " tact");
             return false;
         }
     }
